@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cart</title>
+  <style>
+    /* Add some basic styling to the cart */
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .cart {
+      margin: 20px;
+    }
+
+    .cart-item {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cart</h1>
+  <div class="cart">
+    <h2>Items</h2>
+    <div id="cart-items"></div>
+  </div>
+
+  <script>
+    // Fetch the cart items from the API
+    fetch('http://localhost:3000/cart/items')
+      .then(response => response.json())
+      .then(data => {
+        const cartItemsElement = document.getElementById('cart-items');
+
+        // Check if the response is successful
+        if (data.success) {
+          // Iterate over the cart items and display them
+          data.items.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'cart-item';
+            itemElement.textContent = `Item ID: ${item.id}, Name: ${item.name}, Price: $${item.price}`;
+            cartItemsElement.appendChild(itemElement);
+          });
+        } else {
+          // Display an error message if the request was not successful
+          const errorElement = document.createElement('div');
+          errorElement.textContent = 'Error retrieving cart items.';
+          cartItemsElement.appendChild(errorElement);
+        }
+      })
+      .catch(error => {
+        // Display an error message if an error occurred during the request
+        const errorElement = document.createElement('div');
+        errorElement.textContent = 'Error retrieving cart items.';
+        document.getElementById('cart-items').appendChild(errorElement);
+      });
+  </script>
+</body>
+</html>
